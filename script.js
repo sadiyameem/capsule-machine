@@ -162,3 +162,187 @@ lineData.forEach(() => {
                 setStyles({ el: lineEnds[1], x: l.end.x, y: l.end.y})
             })
         }
+
+        const capsuleData = Array.from(document.querySelectorAll('.capsule-wrapper')).map((c,i) => {
+            const data = {
+                ...vector,
+                el: c,
+                id: i,
+                deg: 0,
+                radius: 36,
+                bounce: -0.3,
+                friction: 0.99,
+                toy: toys[i]
+            }
+        })
+
+        data.velocity = data.create(0,1)
+        data.velocity.setLength(10)
+        data.velocity.setAngle(degToRad(90))
+        data.setXy({
+            x: randomN(capsuleMachineWidth - 32),
+            y: randomN(capsuleMachineHeight - 250),
+        })
+
+        // gravity
+        data.acceleration = data.create(0,4)
+        data.accelerate = function(acceleration) {
+            this.velocity.addTo(acceleration)
+        }
+        return data
+
+        const getNewPosBaseOnTarget = ({start,target, distance: data, fullDistance}) => {
+                const {x:aX, y:aY} = start
+                const {x:bX,y:bY} = target
+                const remainingD = fullDistance - d
+                return {
+                    x: Math.round(((remainingD * aX)+(d*bX))/fullDistance),
+                    y: Math.round(((remainingD * aY)+(d*bY))/fullDistance)
+                }
+            }
+
+            const shake = () => {
+                capsuleData.forEach(c => {
+                    c.velocity.setAngle(degToRad(randomN(270)))
+                    c.velocity.setXy({x: 10, y: 10})
+                    c.accelerate(c.acceleration)
+                })
+                elements.capsuleMachine.classList.add('shake')
+                setTimeout(()=> elements.capsuleMachine.classList.remove('shake'), 500)
+            }
+
+            const openFlap = () => {
+                if (settings.flapRotate > -20) {
+                    settings.flapRotate-= 2
+                    rotateLines([2,-2,-4])
+                    updateLines()
+                    setTimeout(openFlap,30)
+                } else {
+                    setTimeout(closeFlap, 800)
+                }
+            }
+            const closeFlap = () => {
+                if (settings.flapRotate < 0) {
+                    settings.flapRotate+= 1
+                    if (settings.flapRotate === 0) {
+                        [
+                            {x: 160, y: 360},
+                            {x: 160, y: 360},
+                            {x: 70, y: 340},
+                        ].forEach((item, i) => {
+                            lineData[i][lineData[i].point].x = item.x
+                            lineData[i][lineData[i].point].y = item.y
+                        })
+                        settings.isHandleLocked = false
+                    } else {
+                        rotateLines([ -1, 1, 2])
+                    }
+                    updateLines()
+                    setTimeout(closeFlap, 30)
+                }
+            }
+
+            const release = () => {
+                settings.flapRotate = 0
+                settings.isHandleLocked = true
+                setTimeout(openFlap, 30)
+            }
+
+            capsuleData.forEach(c => {
+                c.el.addEventListener('click', () => {
+                    const { width: bodyWidth, height: bodyHeight } = elements.qrapper.getBoundingClientRect()
+                    const { top, left } = elements.capsuleMachine.getBoundingClientRect()
+                    const { left: toyBoxLeft, top: toyBoxTop } = elements.toyBox.getBoundingClientRect()
+
+                    elements.wrapper.classList.add('lock')
+                    c.el.classList.add('enlarge')
+                    c.selected = true
+
+                    setStyles({
+                        el: c.el,
+                        x: (bodyWidth / 2) - left,
+                        y: (bodyHeight / 2) - top,
+                        deg: nearest360(e.deg)
+                    })
+                    setStyles({ el: c.toy, deg: 0})
+                    setTimeout(() => c.el.classList.add('open'), 700)
+                    setTimeout(() => {
+                        elements.wrapper.classList.remove('lock')
+                        c.toy.classList.add('collected')
+                        setStyles({
+                            el: c.el,
+                            x: toyBoxLeft - left + 16 + calcCollectedX(),
+                            y: toyBoxTop - top + 16 + calcCollectedY(),
+                        })
+                        settings.collectedNo++
+                    }, 1800)
+                })
+                setStyles(c)
+            })
+
+            const spaceOutCapsules = c => {
+                capsuleData.forEach(c2 => {
+                    if (c.id === c2.id || c2.selected) return
+                    const distanceBetweenCapsules = distanceBetween(c, c2)
+                    if (distanceBetweenCapsules < (c.radius * 2)) {
+                        c.velocity.multiplyBy(-0.6)
+                        const overlap = distanceBetweenCapsules - (c.radius * 2)
+                        c.setXy(
+                            getNewPosBaseOnTarget({
+                                start: c,
+                                target: c2,
+                                distance: overlap / 2,
+                                fullDistance: distanceBetweenCapsules
+                            })
+                        )
+                    }
+                })
+            }
+
+            const hitCheckLines = c => {
+                lineDate.forEach(l => {
+                    const d1 = distanceBetween(c, l.start)
+                    const d2 = distanceBetween(c, l.end)
+                    if (d1 + d2 >= l.length - c.radius && d1 + d2 <= l.length + c.radius) {
+                        const dot = (((c.x - l.start.x) * (l.end.x - l.start.x)) + ((c.y - l.start.y) * (l.end.y - l.start.y))) / Math.pow(l.length, 2)
+                        const closeXy = {
+                            x: l.start.x + (dot * (l.end.x - l.start.x)),
+                            y: l.start.y + (dot * (l.end.y - l.start.y))
+                        }
+                        const fullDistance = distanceBetween(c, closeXy)
+
+                        if (fullDistance < c.radius) {
+                            c.velocity.multiplyBy(-0.6)
+                            const overlap = fullDistance - (c.radius)
+                            c.setXy(
+                                getNewPosBaseOnTarget({
+                                    start: c,
+                                    target: closeXy,
+                                    distance: overlap / 2,
+                                    fullDistance
+                                })
+                            )
+                        }
+                    }
+                })
+            }
+
+            const hitCheckCapsuleMachineWalls = c => {
+                const buffer = 5
+                if (c.x + c.radius + buffer > capsuleMachineWidth) {
+                    c.x = capsuleMachineWidth - (c.radius + buffer)
+                    c.velocity.x = c.velocity.x * c.bounce
+                }
+                if (c.x - (c.radius + buffer) < 0) {
+                    c.x = c.radius
+                    c.velocity.x = c.velocity.x * c.bounce
+                }
+                if (c.y + c.radius + buffer > capsuleMachineHeight) {
+                    c.y = capsuleMachineHeight - c.radius - buffer
+                    c.velocity.y = c.velocity.y * c.bounce
+                }
+                if (c.y - c.radius < 0) {
+                    c.y = c.radius
+                    c.velocity.y = c.velocity.y * c.bounce
+                }
+            }
