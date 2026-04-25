@@ -58,7 +58,7 @@ p, h1, h2, h3, h4 {
 }
 
 @keyframes shake {
-    0%, 40%, 100% {
+    0%, 40%, 80% {
         margin-left: 5px;
     }
     20%, 60%, 100% {
@@ -81,7 +81,7 @@ p, h1, h2, h3, h4 {
 }
 
 .capsule-machine.see-through::after,
-.capusle-machine.see-through .circle {
+.capsule-machine.see-through .circle {
     opacity: 0.3;
 }
 
@@ -122,6 +122,7 @@ p, h1, h2, h3, h4 {
     --h-m: var(--m) / 2;
     width: calc(var(--w) * var(--m));
     height: calc(var(--h) * var(--h-m));
+    transform-origin: center;
     background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--h-m)) !important;
     background-repeat: no-repeat !important;
     image-rendering: pixelated;
@@ -146,7 +147,7 @@ p, h1, h2, h3, h4 {
 }
 
 .base.pink {
-    background-image: url("images/base.png");
+    background-image: url("images/base.pink.png");
 }
 
 .base.red {
@@ -192,7 +193,7 @@ p, h1, h2, h3, h4 {
     pointer-events: none;
 }
 
-.capsule-wrapper.emlarge .toy {
+.capsule-wrapper.enlarge .toy {
     --m: 4;
 }
 
@@ -200,7 +201,7 @@ p, h1, h2, h3, h4 {
     --m: 6;
 }
 
-.capsule-wrapper.emlarge.open .toy.collected {
+.capsule-wrapper.enlarge.open .toy.collected {
     --m: 2;
 }
 
@@ -232,4 +233,183 @@ p, h1, h2, h3, h4 {
     --h: 40px;
     --m: 4;
     transition: 0.5s;
+}
+
+.circle::after {
+    position: absolute;
+    top: -10px;
+    right: -22px;
+    content: '';
+    --w: 15px;
+    --h: 15px;
+    --m: 4;
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--m));
+    background-image: url("images/circle-after.png");
+    background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--m)) !important;
+    background-repeat: no-repeat !important;
+    image-rendering: pixelated;
+}
+
+.handle {
+    position: relative;
+    width: 160px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.handle::after {
+    position: absolute;
+    top: -7px;
+    content: '';
+    --w: 40px;
+    --h: 16px;
+    --m: 4;
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--m));
+    background-image: url("images/handle.png");
+    background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--m)) !important;
+    background-repeat: no-repeat !important;
+    image-rendering: pixelated;
+}
+
+.cover.white {
+    position: absolute;
+    bottom: 116px;
+    width: 100%;
+    height: calc(220px - 116px);
+    background-color: white;
+    z-index: 1;
+    transition: 0.5s;
+}
+
+button {
+    border: 0;
+    background-color: white;
+    padding: 4px 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin-right: 10px;
+}
+
+.button-wrapper {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 10;
+}
+
+.toy {
+    position: absolute;
+    --w: 16px;
+    --h: 16px;
+    --m: 2;
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--m));
+    z-index: -1;
+    transition: 0.5s;
+}
+
+.bunny {
+    background-image: url("images/bunny.png");
+}
+
+.duck-yellow {
+    background-image: url("images/yellow-duck.png");
+}
+
+.duck-pink {
+    background-image: url("images/pink-duck.png");
+}
+
+.star {
+    background-image: url("images/star.png");
+}
+
+.water-melon {
+    background-image: url("images/water-melon.png");
+}
+
+.panda {
+    background-image: url("images/panda.png");
+}
+
+.penguin {
+    background-image: url("images/penguin.png");
+}
+
+.dino {
+    background-image: url("images/dino.png");
+}
+
+.roboto-san {
+    background-image: url("images/roboto-san.png");
+}
+
+.roboto-sama {
+    background-image: url("images/roboto-sama.png");
+}
+
+.turtle {
+    background-image: url("images/turtle.png");
+}
+
+.cover {
+    position: absolute;
+    z-index: 4;
+    cursor: auto;
+}
+
+.cover.a {
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 280px;
+}
+
+.cover.b {
+    top: 280px;
+    left: 0;
+    width: 212px;
+    height: 220px;
+}
+
+.cover.c {
+    top: 280px;
+    left: 212px;
+    width: 108px;
+    height: 108px;
+}
+
+.cover.d {
+    bottom: 0;
+    left: 212px;
+    width: 80px;
+    height: 24px;
+}
+
+.cover.e {
+    bottom: 0;
+    left: 292px;
+    height: 112px;
+    width: 28px;
+}
+
+.sign {
+    position: absolute;
+    color: white;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
