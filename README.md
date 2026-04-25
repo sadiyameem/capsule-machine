@@ -11,15 +11,20 @@
 - Physics movement (gravity, velocity, friction)
 - Collision between capsules and walls
 
+# Tools
+- HTML
+- CSS
+- JavaScript
+
+# Links
+- https://htmlcolorcodes.com/
+
 # Physics Concept
 - Gravity pulls capsules down using acceleration
 - Velocity controls how fast and the directions each capsule moves in
 - Friction slows the capsules down over time
 - Collision checks when capsules hit the wall or each other
 - Rotation + motion makes the capsules spin as they move
-
-# Links
-- https://htmlcolorcodes.com/
 
 # Pictures
 <img width="1236" height="1474" alt="Screenshot 2026-04-25 at 2 57 45 PM" src="https://github.com/user-attachments/assets/f0604ef7-e6f4-4595-837f-18cc2b4be38b" />
