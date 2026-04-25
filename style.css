@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FFB8B8;
+    overscroll-behavior: contain;
+}
+
+p, h1, h2, h3, h4 {
+    display: inline-block;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+}
+
+.wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pix {
+    background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--m)) !important;
+    background-repeat: no-repeat !important;
+    image-rendering: pixelated;
+}
+
+.toy-box {
+    position: absolute;
+    top: -84px;
+    width: 320px;
+    height: 64px;
+}
+
+.capsule-machine {
+    position: relative;
+    width: 320px;
+    height: 500px;
+    --m: 4;
+    --w: 80px;
+    --h: 125px;
+    background-image: url("images/capsule-machine.png");
+}
+
+.capsule-machine.shake {
+    animation: forwards shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 40%, 100% {
+        margin-left: 5px;
+    }
+    20%, 60%, 100% {
+        margin-left: -5px;
+    }
+}
+
+.capsule-machine::after {
+    position: absolute;
+    content: '';
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--m));
+    background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--m)) !important;
+    background-repeat: no-repeat !important;
+    image-rendering: pixelated;
+    background-image: url("images/capsule-machine-after.png");
+    pointer-events: none;
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.capsule-machine.see-through::after,
+.capusle-machine.see-through .circle {
+    opacity: 0.3;
+}
+
+.wrapper.lock {
+    pointer-events: none;
+}
+
+.lock-cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: 1s;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.wrapper.lock .lock-cover {
+    background-color: #FABCB2;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+.capsule {
+    position: absolute;
+    left: calc((var(--w) * var(--m)) / var(--offset));
+    top: calc((var(--h) * var(--m)) / var(--offset));
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--m));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lid, .base {
+    position: absolute;
+    --h-m: var(--m) / 2;
+    width: calc(var(--w) * var(--m));
+    height: calc(var(--h) * var(--h-m));
+    background-size: calc(var(--w) * var(--m)) calc(var(--h) * var(--h-m)) !important;
+    background-repeat: no-repeat !important;
+    image-rendering: pixelated;
+}
+
+.lid {
+    background-image: url("images/lid.png");
+    top: 0;
+    --start: 0;
+    --end: -100px;
+}
+
+.base {
+    background-image: url("images/base.png");
+    bottom: 0;
+    --start: 0;
+    --end: 0;
+}
+
+.base.white {
+    background-image: url("images/base.white.png");
+}
+
+.base.pink {
+    background-image: url("images/base.png");
+}
+
+.base.red {
+    background-image: url("images/base.red.png");
+}
+
+.base.blue {
+    background-image: url("images/base-blue.png");
+}
+
+.capsule-wrapper.open .lid,
+.capsule-wrapper.open .base {
+    animation: open-capsule forwards 1s;
+}
+
+@keyframes open-capsule {
+    0% {
+        transform: translateY(var(--start));
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(var(--end));
+        opacity: 0;
+    }
+}
+
+.capsule-wrapper {
+    position: absolute;
+    --m: 4;
+    --w: 16px;
+    --h: 16px;
+    --offset: -2;
+    width: 0;
+    height: 0;
+    transition: 0.05s;
+    cursor: pointer;
+}
+
+.capsule-wrapper.enlarge {
+    --m: 8;
+    z-index: 11;
+    transition: 0.8s;
+    pointer-events: none;
+}
+
+.capsule-wrapper.emlarge .toy {
+    --m: 4;
+}
+
+.capsule-wrapper.enlarge.open .toy {
+    --m: 6;
+}
+
+.capsule-wrapper.emlarge.open .toy.collected {
+    --m: 2;
+}
+
+.line-start,
+.line-end {
+    position: absolute;
+    height: 0;
+    width: 0;
+}
+
+.line {
+    position: absolute;
+    height: 1px;
+    width: 0;
+    border-top: solid #FF9B36 4px;
+}
+
+.circle {
+    position: absolute;
+    bottom: 30px;
+    left: 26px;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+    background-image: url("images/circle.png");
+    --w: 40px;
+    --h: 40px;
+    --m: 4;
+    transition: 0.5s;
+}
